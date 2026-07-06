@@ -1,0 +1,1065 @@
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dragon Ball Z — Beyond The Limit</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700;900&family=Rajdhani:wght@400;600;700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --orange: #FF6B00;
+    --gold: #FFD700;
+    --deep-orange: #CC3D00;
+    --blue-ki: #00BFFF;
+    --plasma: #8B00FF;
+    --dark: #0A0508;
+    --mid: #1A0C12;
+    --text: #F5E6D0;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--dark);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    overflow-x: hidden;
+  }
+
+  #bg-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 3rem;
+    background: linear-gradient(to bottom, rgba(10,5,8,0.95), transparent);
+    backdrop-filter: blur(4px);
+  }
+
+  .logo {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    background: linear-gradient(90deg, var(--orange), var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-transform: uppercase;
+  }
+
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 2.5rem;
+  }
+
+  nav a {
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  nav a:hover { color: var(--gold); }
+
+  #hero {
+    position: relative;
+    z-index: 10;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 0 6rem;
+    overflow: hidden;
+  }
+
+  .power-level {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .power-level::before {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 2px;
+    background: var(--orange);
+  }
+
+  h1 {
+    font-family: 'Oswald', sans-serif;
+    font-size: clamp(4rem, 10vw, 10rem);
+    font-weight: 900;
+    line-height: 0.9;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    margin-bottom: 2rem;
+  }
+
+  h1 .line1 {
+    display: block;
+    background: linear-gradient(135deg, #fff 0%, var(--gold) 40%, var(--orange) 80%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  h1 .line2 {
+    display: block;
+    -webkit-text-stroke: 2px var(--orange);
+    color: transparent;
+    font-size: 0.6em;
+    letter-spacing: 0.18em;
+  }
+
+  .hero-sub {
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: rgba(245,230,208,0.7);
+    max-width: 480px;
+    line-height: 1.7;
+    margin-bottom: 3rem;
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: 1.2rem;
+    align-items: center;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--orange), var(--deep-orange));
+    color: #fff;
+    font-family: 'Oswald', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 1rem 2.5rem;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 0 30px rgba(255,107,0,0.4);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 60px rgba(255,107,0,0.7);
+  }
+
+  .btn-secondary {
+    color: var(--text);
+    font-family: 'Oswald', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    cursor: pointer;
+    background: none;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    transition: color 0.2s;
+  }
+
+  .btn-secondary:hover { color: var(--gold); }
+
+  .btn-secondary::after {
+    content: '▶';
+    font-size: 0.7em;
+  }
+
+  
+  .ki-bar {
+    margin-top: 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .ki-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--blue-ki);
+  }
+
+  .ki-track {
+    width: 280px;
+    height: 4px;
+    background: rgba(0,191,255,0.15);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .ki-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--blue-ki), var(--plasma));
+    border-radius: 2px;
+    animation: ki-pulse 2s ease-in-out infinite alternate;
+    box-shadow: 0 0 12px var(--blue-ki);
+  }
+
+  @keyframes ki-pulse {
+    from { width: 65%; }
+    to { width: 100%; }
+  }
+
+  #dragon-balls {
+    position: relative;
+    z-index: 10;
+    padding: 6rem;
+    background: linear-gradient(to bottom, transparent, var(--mid) 20%, var(--mid) 80%, transparent);
+  }
+
+  .section-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.45em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 3rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, var(--gold), transparent);
+    max-width: 200px;
+  }
+
+  .balls-grid {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 4rem;
+  }
+
+  .db-card {
+    position: relative;
+    width: 130px;
+    height: 130px;
+    cursor: pointer;
+    transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  }
+
+  .db-card:hover {
+    transform: scale(1.15) rotate(-5deg);
+  }
+
+  .db-card svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 0 20px rgba(255,165,0,0.6));
+    transition: filter 0.3s;
+  }
+
+  .db-card:hover svg {
+    filter: drop-shadow(0 0 40px rgba(255,215,0,0.9));
+  }
+
+  .db-card .stars-label {
+    position: absolute;
+    bottom: -1.8rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    white-space: nowrap;
+  }
+
+
+  #sagas {
+    position: relative;
+    z-index: 10;
+    padding: 6rem;
+  }
+
+  .sagas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5px;
+    border: 1.5px solid rgba(255,107,0,0.2);
+  }
+
+  .saga-tile {
+    position: relative;
+    padding: 3rem 2.5rem;
+    background: rgba(26,12,18,0.8);
+    overflow: hidden;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+
+  .saga-tile::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 0%;
+    background: var(--orange);
+    transition: height 0.4s ease;
+  }
+
+  .saga-tile:hover::before { height: 100%; }
+  .saga-tile:hover { background: rgba(40,15,20,0.9); }
+
+  .saga-num {
+    font-family: 'Oswald', sans-serif;
+    font-size: 4rem;
+    font-weight: 900;
+    color: rgba(255,107,0,0.1);
+    line-height: 1;
+    margin-bottom: 1rem;
+  }
+
+  .saga-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.8rem;
+    color: var(--text);
+  }
+
+  .saga-desc {
+    font-size: 0.95rem;
+    color: rgba(245,230,208,0.6);
+    line-height: 1.65;
+  }
+
+  .saga-power {
+    margin-top: 1.5rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    color: var(--orange);
+    text-transform: uppercase;
+  }
+
+ 
+  #transformations {
+    position: relative;
+    z-index: 10;
+    padding: 6rem;
+    background: linear-gradient(to bottom, transparent, rgba(10,5,8,0.95));
+  }
+
+  .transform-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .transform-item {
+    display: grid;
+    grid-template-columns: 80px 1fr auto;
+    align-items: center;
+    gap: 2rem;
+    padding: 2rem 0;
+    border-bottom: 1px solid rgba(255,107,0,0.15);
+    cursor: pointer;
+    transition: padding-left 0.3s;
+  }
+
+  .transform-item:hover {
+    padding-left: 1rem;
+  }
+
+  .t-index {
+    font-family: 'Oswald', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: rgba(255,107,0,0.25);
+  }
+
+
+  .t-name {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 0.3rem;
+  }
+
+  .t-detail {
+    font-size: 0.9rem;
+    color: rgba(245,230,208,0.55);
+    font-weight: 400;
+  }
+
+  .t-multiplier {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .ssj1 .t-name { color: #FFD700; }
+  .ssj2 .t-name { color: #FFE44D; }
+  .ssj3 .t-name { color: #FFEE80; }
+  .ssj4 .t-name { color: #CC0044; }
+  .ssjg .t-name { color: #4488FF; }
+  .ssje .t-name { color: var(--blue-ki); }
+  .ultra .t-name { color: #fff; }
+
+  
+  #scene-section {
+    position: relative;
+    z-index: 10;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  #scene-canvas {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+  }
+
+  .scene-overlay {
+    position: relative;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .scene-overlay h2 {
+    font-family: 'Oswald', sans-serif;
+    font-size: clamp(2rem, 6vw, 5rem);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: linear-gradient(135deg, #fff, var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1rem;
+  }
+
+  .scene-overlay p {
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.6);
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+
+  footer {
+    position: relative;
+    z-index: 10;
+    padding: 3rem 6rem;
+    border-top: 1px solid rgba(255,107,0,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--dark);
+  }
+
+  footer .logo { font-size: 1.1rem; }
+
+  footer p {
+    font-size: 0.8rem;
+    color: rgba(245,230,208,0.35);
+    letter-spacing: 0.1em;
+  }
+
+  
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  
+  .lightning {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(255,255,255,0.04);
+    z-index: 5;
+    pointer-events: none;
+    opacity: 0;
+    animation: lightning-flicker 8s infinite;
+  }
+
+  @keyframes lightning-flicker {
+    0%, 95%, 100% { opacity: 0; }
+    96% { opacity: 1; }
+    97% { opacity: 0; }
+    98% { opacity: 0.5; }
+    99% { opacity: 0; }
+  }
+
+
+  .section-h2 {
+    font-family: 'Oswald', sans-serif;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    margin-bottom: 3.5rem;
+    line-height: 1;
+  }
+
+  .section-h2 span {
+    background: linear-gradient(135deg, var(--gold), var(--orange));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  @media (max-width: 768px) {
+    #hero, #dragon-balls, #sagas, #transformations, footer { padding: 2rem; }
+    h1 { font-size: 3.5rem; }
+    .balls-grid { gap: 1.2rem; }
+    .db-card { width: 90px; height: 90px; }
+    nav { padding: 1rem 1.5rem; }
+    nav ul { gap: 1.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+<div class="lightning"></div>
+
+<nav>
+  <div class="logo">Dragon Ball Z</div>
+  <ul>
+    <li><a href="#dragon-balls">Dragon Balls</a></li>
+    <li><a href="#sagas">Sagas</a></li>
+    <li><a href="#transformations">Power</a></li>
+    <li><a href="#scene-section">Universe</a></li>
+  </ul>
+</nav>
+
+
+<section id="hero">
+  <div class="power-level">Power Level Exceeds 9000</div>
+  <h1>
+    <span class="line1">Beyond</span>
+    <span class="line2">Every Limit</span>
+  </h1>
+  <p class="hero-sub">
+    The saga of warriors who shatter the boundaries of power, pride, and destiny — across universes, across time.
+  </p>
+  <div class="hero-cta">
+    <button class="btn-primary" onclick="document.getElementById('sagas').scrollIntoView({behavior:'smooth'})">
+      Explore Sagas
+    </button>
+    <button class="btn-secondary" onclick="document.getElementById('scene-section').scrollIntoView({behavior:'smooth'})">
+      3D Universe
+    </button>
+  </div>
+  <div class="ki-bar">
+    <div class="ki-label">Ki Level</div>
+    <div class="ki-track"><div class="ki-fill"></div></div>
+  </div>
+</section>
+
+
+<section id="dragon-balls">
+  <div class="section-label">Collect All Seven</div>
+  <h2 class="section-h2 reveal">The Dragon <span>Balls</span></h2>
+  <div class="balls-grid">
+  
+  </div>
+  <p style="text-align:center;color:rgba(245,230,208,0.5);font-size:0.95rem;max-width:500px;margin:3rem auto 0;line-height:1.7;">
+    Seven mystical spheres scattered across the Earth. Gather them all and Shenron shall grant any wish — power, immortality, or the revival of fallen warriors.
+  </p>
+</section>
+
+
+<section id="sagas">
+  <div class="section-label">Chapter by Chapter</div>
+  <h2 class="section-h2 reveal">Epic <span>Sagas</span></h2>
+  <div class="sagas-grid">
+    <div class="saga-tile reveal">
+      <div class="saga-num">01</div>
+      <div class="saga-title">Saiyan Saga</div>
+      <div class="saga-desc">Raditz arrives. Goku learns the truth about his origins. Gohan's hidden power awakens for the first time.</div>
+      <div class="saga-power">Power Level: 8,000+</div>
+    </div>
+    <div class="saga-tile reveal">
+      <div class="saga-num">02</div>
+      <div class="saga-title">Namek Saga</div>
+      <div class="saga-desc">Race to Planet Namek. The Ginyu Force stands between Earth's warriors and the Dragon Balls.</div>
+      <div class="saga-power">Power Level: 530,000+</div>
+    </div>
+    <div class="saga-tile reveal">
+      <div class="saga-num">03</div>
+      <div class="saga-title">Frieza Saga</div>
+      <div class="saga-desc">Krillin falls. The legend ignites. For the first time in 1,000 years — a Super Saiyan walks the universe.</div>
+      <div class="saga-power">Power Level: 150,000,000</div>
+    </div>
+    <div class="saga-tile reveal">
+      <div class="saga-num">04</div>
+      <div class="saga-title">Android Saga</div>
+      <div class="saga-desc">The future bleeds into the present. Dr. Gero's creations tear apart everything the Z Warriors have built.</div>
+      <div class="saga-power">Power Level: 1,000,000,000+</div>
+    </div>
+    <div class="saga-tile reveal">
+      <div class="saga-num">05</div>
+      <div class="saga-title">Cell Saga</div>
+      <div class="saga-desc">The perfect lifeform reaches his final form. Father and son stand together against the ultimate creation.</div>
+      <div class="saga-power">Power Level: 10,000,000,000+</div>
+    </div>
+    <div class="saga-tile reveal">
+      <div class="saga-num">06</div>
+      <div class="saga-title">Buu Saga</div>
+      <div class="saga-desc">An ancient evil is unsealed. Magic, fusion, and the power of every human on Earth collide in a final Spirit Bomb.</div>
+      <div class="saga-power">Power Level: Immeasurable</div>
+    </div>
+  </div>
+</section>
+
+
+<section id="transformations">
+  <div class="section-label">Ascension Path</div>
+  <h2 class="section-h2 reveal" style="text-align:center">Super Saiyan <span>Transformations</span></h2>
+  <div class="transform-list">
+    <div class="transform-item ssj1 reveal">
+      <div class="t-index">01</div>
+      <div class="t-info">
+        <div class="t-name">Super Saiyan</div>
+        <div class="t-detail">Golden hair. Emerald eyes. Born from pure rage and grief.</div>
+      </div>
+      <div class="t-multiplier" style="color:#FFD700">×50</div>
+    </div>
+    <div class="transform-item ssj2 reveal">
+      <div class="t-index">02</div>
+      <div class="t-info">
+        <div class="t-name">Super Saiyan 2</div>
+        <div class="t-detail">Lightning crackles. Gohan unleashes what he's suppressed for years.</div>
+      </div>
+      <div class="t-multiplier" style="color:#FFE44D">×100</div>
+    </div>
+    <div class="transform-item ssj3 reveal">
+      <div class="t-index">03</div>
+      <div class="t-info">
+        <div class="t-name">Super Saiyan 3</div>
+        <div class="t-detail">Hair that reaches the floor. The earth shakes with the transformation's roar.</div>
+      </div>
+      <div class="t-multiplier" style="color:#FFEE80">×400</div>
+    </div>
+    <div class="transform-item ssj4 reveal">
+      <div class="t-index">04</div>
+      <div class="t-info">
+        <div class="t-name">Super Saiyan 4</div>
+        <div class="t-detail">The ancient Saiyan form reborn. Red fur, black hair, primal domination.</div>
+      </div>
+      <div class="t-multiplier" style="color:#CC0044">×?</div>
+    </div>
+    <div class="transform-item ssjg reveal">
+      <div class="t-index">05</div>
+      <div class="t-info">
+        <div class="t-name">Super Saiyan God</div>
+        <div class="t-detail">Six righteous Saiyans bind their ki. Divine flame burns crimson.</div>
+      </div>
+      <div class="t-multiplier" style="color:#4488FF">God</div>
+    </div>
+    <div class="transform-item ssje reveal">
+      <div class="t-index">06</div>
+      <div class="t-info">
+        <div class="t-name">Super Saiyan Blue</div>
+        <div class="t-detail">God ki fused with the Super Saiyan form. Calm power beyond measure.</div>
+      </div>
+      <div class="t-multiplier" style="color:#00BFFF">∞</div>
+    </div>
+    <div class="transform-item ultra reveal">
+      <div class="t-index">07</div>
+      <div class="t-info">
+        <div class="t-name">Ultra Instinct</div>
+        <div class="t-detail">Mind and body move as one. Even the angels seldom achieve this.</div>
+      </div>
+      <div class="t-multiplier" style="color:#fff">∞∞</div>
+    </div>
+  </div>
+</section>
+
+
+<section id="scene-section">
+  <canvas id="scene-canvas"></canvas>
+  <div class="scene-overlay">
+    <h2>The Universe Awaits</h2>
+    <p>Twelve universes. Countless warriors. One eternal question — how far can you push beyond your limits?</p>
+  </div>
+</section>
+
+
+<footer>
+  <div class="logo">Dragon Ball Z</div>
+  <p>© Dragon Ball Z — Akira Toriyama — Fan Tribute Site</p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+
+(function() {
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+
+  class Particle {
+    constructor() { this.reset(true); }
+    reset(init) {
+      this.x = Math.random() * W;
+      this.y = init ? Math.random() * H : H + 10;
+      this.r = Math.random() * 1.5 + 0.3;
+      this.vy = -(Math.random() * 0.4 + 0.1);
+      this.vx = (Math.random() - 0.5) * 0.2;
+      const t = Math.random();
+      this.color = t < 0.4
+        ? `rgba(255,${107 + Math.floor(Math.random()*60)},0,`
+        : t < 0.7
+          ? `rgba(0,${150 + Math.floor(Math.random()*100)},255,`
+          : `rgba(255,${200 + Math.floor(Math.random()*55)},0,`;
+      this.alpha = Math.random() * 0.8 + 0.2;
+      this.life = 1;
+      this.decay = Math.random() * 0.003 + 0.001;
+    }
+    update() {
+      this.x += this.vx;
+      this.y += this.vy;
+      this.life -= this.decay;
+      if (this.life <= 0 || this.y < -10) this.reset(false);
+    }
+    draw() {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fillStyle = this.color + (this.alpha * this.life) + ')';
+      ctx.fill();
+    }
+  }
+
+  for (let i = 0; i < 200; i++) particles.push(new Particle());
+
+  function loop() {
+    ctx.clearRect(0, 0, W, H);
+    particles.forEach(p => { p.update(); p.draw(); });
+    requestAnimationFrame(loop);
+  }
+  loop();
+})();
+
+
+(function() {
+  const grid = document.querySelector('.balls-grid');
+  const starsData = [1,2,3,4,5,6,7];
+  const names = ['One-Star','Two-Star','Three-Star','Four-Star','Five-Star','Six-Star','Seven-Star'];
+
+  starsData.forEach((count, idx) => {
+    const card = document.createElement('div');
+    card.className = 'db-card';
+
+    const positions = [
+      [[50,50]],
+      [[35,38],[65,62]],
+      [[35,35],[65,35],[50,65]],
+      [[33,33],[67,33],[33,67],[67,67]],
+      [[50,25],[25,50],[75,50],[38,72],[62,72]],
+      [[35,28],[65,28],[20,55],[80,55],[35,72],[65,72]],
+      [[50,22],[22,40],[78,40],[30,65],[70,65],[38,82],[62,82]]
+    ];
+
+    const pts = positions[count - 1];
+
+    let starsSVG = pts.map(([cx,cy]) => `
+      <g transform="translate(${cx},${cy})">
+        <polygon points="0,-6 1.4,-2 5.7,-1.8 2.5,1.2 3.5,5.5 0,3 -3.5,5.5 -2.5,1.2 -5.7,-1.8 -1.4,-2"
+          fill="#CC2200" stroke="#880000" stroke-width="0.3"/>
+      </g>
+    `).join('');
+
+    card.innerHTML = `
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="bg${idx}" cx="35%" cy="35%" r="60%">
+            <stop offset="0%" stop-color="#FFF176"/>
+            <stop offset="40%" stop-color="#FFD700"/>
+            <stop offset="100%" stop-color="#E65100"/>
+          </radialGradient>
+          <radialGradient id="shine${idx}" cx="32%" cy="28%" r="40%">
+            <stop offset="0%" stop-color="rgba(255,255,255,0.7)"/>
+            <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+          </radialGradient>
+          <filter id="glow${idx}">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+            <feOffset dx="0" dy="0"/>
+            <feComposite in2="SourceGraphic"/>
+          </filter>
+        </defs>
+        <circle cx="50" cy="50" r="45" fill="url(#bg${idx})" stroke="#B8860B" stroke-width="1.5"/>
+        <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+        <ellipse cx="36" cy="34" rx="12" ry="8" fill="url(#shine${idx})" opacity="0.6"/>
+        ${starsSVG}
+        <circle cx="50" cy="50" r="45" fill="rgba(0,0,0,0.04)"/>
+      </svg>
+      <div class="stars-label">${names[idx]} Ball</div>
+    `;
+
+    card.addEventListener('mouseenter', () => {
+      card.style.zIndex = '10';
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.zIndex = '';
+    });
+
+    grid.appendChild(card);
+  });
+})();
+
+
+(function() {
+  const canvas = document.getElementById('scene-canvas');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(60, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+  camera.position.set(0, 0, 8);
+
+  const ambient = new THREE.AmbientLight(0x220011, 2);
+  scene.add(ambient);
+
+  const orangeLight = new THREE.PointLight(0xFF6B00, 4, 20);
+  orangeLight.position.set(5, 3, 5);
+  scene.add(orangeLight);
+
+  const blueLight = new THREE.PointLight(0x0088FF, 3, 20);
+  blueLight.position.set(-5, -3, 5);
+  scene.add(blueLight);
+
+  const goldLight = new THREE.PointLight(0xFFD700, 2, 20);
+  goldLight.position.set(0, 5, 0);
+  scene.add(goldLight);
+
+ 
+  const dbGeo = new THREE.SphereGeometry(1.8, 64, 64);
+  const dbMat = new THREE.MeshPhongMaterial({
+    color: 0xFFAA00,
+    emissive: 0x441100,
+    specular: 0xFFFFCC,
+    shininess: 120,
+    transparent: true,
+    opacity: 0.92
+  });
+  const dbMesh = new THREE.Mesh(dbGeo, dbMat);
+  scene.add(dbMesh);
+
+  const innerGeo = new THREE.SphereGeometry(1.6, 32, 32);
+  const innerMat = new THREE.MeshBasicMaterial({
+    color: 0xFF4400,
+    transparent: true,
+    opacity: 0.15,
+    side: THREE.BackSide
+  });
+  scene.add(new THREE.Mesh(innerGeo, innerMat));
+
+  function makeStar(position) {
+    const starShape = new THREE.Shape();
+    const outerR = 0.12, innerR = 0.06;
+    for (let i = 0; i < 10; i++) {
+      const angle = (i * Math.PI) / 5 - Math.PI / 2;
+      const r = i % 2 === 0 ? outerR : innerR;
+      const x = Math.cos(angle) * r;
+      const y = Math.sin(angle) * r;
+      if (i === 0) starShape.moveTo(x, y);
+      else starShape.lineTo(x, y);
+    }
+    starShape.closePath();
+    const geo = new THREE.ShapeGeometry(starShape);
+    const mat = new THREE.MeshBasicMaterial({ color: 0xCC1100, side: THREE.DoubleSide });
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.position.copy(position);
+    mesh.lookAt(new THREE.Vector3(0,0,0));
+    mesh.position.multiplyScalar(1.01);
+    return mesh;
+  }
+
+  const starPositions = [
+    new THREE.Vector3(0, 1.8, 0),
+    new THREE.Vector3(1.2, 1.3, 0.9),
+    new THREE.Vector3(-1.2, 1.3, 0.9),
+    new THREE.Vector3(0, 0.7, -1.65),
+  ];
+  starPositions.forEach(pos => {
+    pos.normalize().multiplyScalar(1.8);
+    dbMesh.add(makeStar(pos));
+  });
+
+  const rings = [];
+  [2.5, 3.2, 4.0].forEach((r, i) => {
+    const geo = new THREE.TorusGeometry(r, 0.018, 8, 120);
+    const mat = new THREE.MeshBasicMaterial({
+      color: i === 0 ? 0xFF6B00 : i === 1 ? 0x0099FF : 0xFFD700,
+      transparent: true,
+      opacity: 0.6
+    });
+    const ring = new THREE.Mesh(geo, mat);
+    ring.rotation.x = Math.PI / 2 + i * 0.4;
+    ring.rotation.z = i * 0.6;
+    rings.push(ring);
+    scene.add(ring);
+  });
+
+  const smallBalls = [];
+  const colors = [0xFFD700, 0xFF4400, 0x00CCFF, 0xFF8800, 0x88FF00, 0xFF00AA];
+  colors.forEach((c, i) => {
+    const angle = (i / colors.length) * Math.PI * 2;
+    const r = 3.8;
+    const geo = new THREE.SphereGeometry(0.22, 16, 16);
+    const mat = new THREE.MeshPhongMaterial({
+      color: c,
+      emissive: c,
+      emissiveIntensity: 0.3,
+      shininess: 80
+    });
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.position.set(Math.cos(angle) * r, Math.sin(angle) * 1.5, Math.sin(angle) * r * 0.7);
+    scene.add(mesh);
+    smallBalls.push({ mesh, angle, r, speed: 0.008 + i * 0.001, yOffset: i * 0.5 });
+  });
+
+  const pCount = 600;
+  const pPositions = new Float32Array(pCount * 3);
+  const pColors = new Float32Array(pCount * 3);
+  for (let i = 0; i < pCount; i++) {
+    const theta = Math.random() * Math.PI * 2;
+    const phi = Math.acos(2 * Math.random() - 1);
+    const r = 5 + Math.random() * 6;
+    pPositions[i*3]   = r * Math.sin(phi) * Math.cos(theta);
+    pPositions[i*3+1] = r * Math.sin(phi) * Math.sin(theta);
+    pPositions[i*3+2] = r * Math.cos(phi);
+    const t = Math.random();
+    if (t < 0.4) { pColors[i*3]=1; pColors[i*3+1]=0.42; pColors[i*3+2]=0; }
+    else if (t < 0.7) { pColors[i*3]=0; pColors[i*3+1]=0.6; pColors[i*3+2]=1; }
+    else { pColors[i*3]=1; pColors[i*3+1]=0.84; pColors[i*3+2]=0; }
+  }
+  const pGeo = new THREE.BufferGeometry();
+  pGeo.setAttribute('position', new THREE.BufferAttribute(pPositions, 3));
+  pGeo.setAttribute('color', new THREE.BufferAttribute(pColors, 3));
+  const pMat = new THREE.PointsMaterial({ size: 0.06, vertexColors: true, transparent: true, opacity: 0.8 });
+  scene.add(new THREE.Points(pGeo, pMat));
+
+  function onResize() {
+    const w = canvas.clientWidth;
+    const h = canvas.clientHeight;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+  window.addEventListener('resize', onResize);
+
+  let mx = 0, my = 0;
+  window.addEventListener('mousemove', e => {
+    mx = (e.clientX / window.innerWidth - 0.5) * 2;
+    my = (e.clientY / window.innerHeight - 0.5) * 2;
+  });
+
+  let t = 0;
+  function animate() {
+    requestAnimationFrame(animate);
+    t += 0.012;
+
+  
+    dbMesh.rotation.y += 0.005;
+    dbMesh.rotation.x += 0.002;
+
+  
+    const pulse = 0.5 + 0.5 * Math.sin(t * 1.5);
+    dbMat.emissive.setHex(0x441100);
+    dbMat.emissiveIntensity = 0.3 + pulse * 0.4;
+    orangeLight.intensity = 3 + pulse * 2;
+
+  
+    rings[0].rotation.z += 0.008;
+    rings[1].rotation.x += 0.006;
+    rings[2].rotation.y += 0.005;
+
+    smallBalls.forEach(b => {
+      b.angle += b.speed;
+      const r = b.r;
+      b.mesh.position.x = Math.cos(b.angle) * r;
+      b.mesh.position.z = Math.sin(b.angle) * r * 0.7;
+      b.mesh.position.y = Math.sin(b.angle * 2 + b.yOffset) * 1.5;
+    });
+
+    camera.position.x += (mx * 1.5 - camera.position.x) * 0.05;
+    camera.position.y += (-my * 1.2 - camera.position.y) * 0.05;
+    camera.lookAt(scene.position);
+
+    renderer.render(scene, camera);
+  }
+  animate();
+})();
+
+(function() {
+  const els = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); }
+    });
+  }, { threshold: 0.15 });
+  els.forEach(el => io.observe(el));
+})();
+</script>
+</body>
+</html>
